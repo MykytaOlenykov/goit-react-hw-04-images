@@ -1,5 +1,7 @@
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 import * as S from './Searchbar.styled';
 import { GoSearch } from 'react-icons/go';
 
@@ -8,7 +10,10 @@ const initialValues = {
 };
 
 const schema = yup.object().shape({
-  searchQuery: yup.string().required('Enter something in the field.'),
+  searchQuery: yup.string().required(() => {
+    toast.error('Enter something in the field.');
+    toast.clearWaitingQueue();
+  }),
 });
 
 export const Searchbar = ({ onSubmit }) => {
@@ -39,4 +44,8 @@ export const Searchbar = ({ onSubmit }) => {
       </Formik>
     </S.Header>
   );
+};
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
