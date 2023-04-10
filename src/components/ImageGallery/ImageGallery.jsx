@@ -1,10 +1,9 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ImgsAPI } from 'services';
+import * as imgsAPI from 'services';
 import { ImageGalleryItem } from 'components/ImageGalleryItem';
+import { Button } from 'components/Button';
 import { Gallery } from './ImageGallery.styled';
-
-const imgsAPI = new ImgsAPI();
 
 export class ImageGallery extends Component {
   static propTypes = {
@@ -13,30 +12,58 @@ export class ImageGallery extends Component {
 
   state = {
     images: [],
+    isLoading: false,
+    page: 1,
   };
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps, prevState) {
     const prevImgName = prevProps.imgName;
     const nextImgName = this.props.imgName;
+    const prevPage = prevState.page;
+    const nextPage = this.state.page;
 
     if (nextImgName !== prevImgName) {
+      this.setState({ isLoading: true, page: 1 });
+
       try {
-        const data = await imgsAPI.getImgs(nextImgName);
+        const data = await imgsAPI.getImgs(nextPage, nextImgName);
         this.setState({ images: data.hits });
       } catch (error) {
         console.log(error);
+      } finally {
+        this.setState({ isLoading: false });
+      }
+    }
+
+    if (nextPage > prevPage) {
+      this.setState({ isLoading: true });
+
+      try {
+        const data = await imgsAPI.getImgs(nextPage, nextImgName);
+        this.setState(({ images }) => ({ images: [...images, ...data.hits] }));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setState({ isLoading: false });
       }
     }
   }
 
+  handleLoadMore = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
+  };
+
   render() {
     const { images } = this.state;
     return (
-      <Gallery>
-        {images.map(({ id, tags, largeImageURL }) => (
-          <ImageGalleryItem key={id} descr={tags} imgUrl={largeImageURL} />
-        ))}
-      </Gallery>
+      <>
+        <Gallery>
+          {images.map(({ id, tags, largeImageURL }) => (
+            <ImageGalleryItem key={id} descr={tags} imgUrl={largeImageURL} />
+          ))}
+        </Gallery>
+        {images.length !== 0 && <Button onLoadMore={this.handleLoadMore} />}
+      </>
     );
   }
 }

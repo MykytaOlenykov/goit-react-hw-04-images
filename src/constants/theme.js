@@ -5,6 +5,7 @@ export const theme = {
     secondaryBg: '#d9d9d9',
     primaryText: '#212121',
     secondaryText: '#757575',
+    accentBtn: '#303f9f',
   },
   duration: '250ms',
   timingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
