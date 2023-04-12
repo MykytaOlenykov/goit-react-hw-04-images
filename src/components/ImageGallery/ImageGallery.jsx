@@ -5,6 +5,7 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { Button } from 'components/Button';
 import { Loader } from 'components/Loader';
 import { Gallery } from './ImageGallery.styled';
+import { toast } from 'react-toastify';
 
 export class ImageGallery extends Component {
   static propTypes = {
@@ -29,6 +30,14 @@ export class ImageGallery extends Component {
 
       try {
         const data = await imgsAPI.getImgs(nextPage, nextImgName);
+
+        if (!data.hits.length) {
+          toast.error(`No results found for ${nextImgName}`);
+          return;
+        }
+
+        this.checkIsAllColection();
+
         this.setState({ images: data.hits, total: data.totalHits });
       } catch (error) {
         console.log(error);
@@ -42,14 +51,23 @@ export class ImageGallery extends Component {
 
       try {
         const data = await imgsAPI.getImgs(nextPage, nextImgName);
+
         this.setState(({ images }) => ({
           images: [...images, ...data.hits],
         }));
+
+        this.checkIsAllColection();
       } catch (error) {
         console.log(error);
       } finally {
         this.setState({ isLoading: false });
       }
+    }
+  }
+
+  checkIsAllColection() {
+    if (this.state.images >= this.state.total) {
+      toast(`You have uploaded all images for request ${this.props.imgName}`);
     }
   }
 
