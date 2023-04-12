@@ -15,6 +15,7 @@ export class ImageGallery extends Component {
     images: [],
     page: 1,
     isLoading: false,
+    total: 0,
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -24,11 +25,11 @@ export class ImageGallery extends Component {
     const nextPage = this.state.page;
 
     if (nextImgName !== prevImgName) {
-      this.setState({ isLoading: true, page: 1, images: [] });
+      this.setState({ isLoading: true, page: 1, images: [], total: 0 });
 
       try {
         const data = await imgsAPI.getImgs(nextPage, nextImgName);
-        this.setState({ images: data.hits });
+        this.setState({ images: data.hits, total: data.totalHits });
       } catch (error) {
         console.log(error);
       } finally {
@@ -57,20 +58,26 @@ export class ImageGallery extends Component {
   };
 
   render() {
-    const { images, isLoading } = this.state;
+    const { images, isLoading, total } = this.state;
+    const isVisibleBtn = images.length !== 0 && images.length < total;
 
     return (
       <>
         <Gallery>
-          {images.map(({ id, tags, largeImageURL }) => (
-            <ImageGalleryItem key={id} descr={tags} imgUrl={largeImageURL} />
+          {images.map(({ id, tags, webformatURL, largeImageURL }) => (
+            <ImageGalleryItem
+              key={id}
+              descr={tags}
+              imgUrl={webformatURL}
+              largeImgURL={largeImageURL}
+            />
           ))}
         </Gallery>
 
         {isLoading ? (
           <Loader />
         ) : (
-          images.length !== 0 && <Button onLoadMore={this.handleLoadMore} />
+          isVisibleBtn && <Button onLoadMore={this.handleLoadMore} />
         )}
       </>
     );

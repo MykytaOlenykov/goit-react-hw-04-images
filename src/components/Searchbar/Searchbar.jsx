@@ -1,34 +1,27 @@
 import { Formik } from 'formik';
-import * as yup from 'yup';
-import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import * as S from './Searchbar.styled';
 import { GoSearch } from 'react-icons/go';
 
-const initialValues = {
-  searchQuery: '',
-};
-
-const schema = yup.object().shape({
-  searchQuery: yup.string().required(() => {
-    toast.error('Enter something in the field.');
-    toast.clearWaitingQueue();
-  }),
-});
-
 export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+    const imgName = values.imgName.trim().toLowerCase();
+
+    if (!imgName.length) {
+      toast.error('Enter something in the field.');
+      resetForm();
+
+      return;
+    }
+
+    onSubmit(imgName);
     resetForm();
   };
 
   return (
     <S.Header>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={schema}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={{ imgName: '' }} onSubmit={handleSubmit}>
         <S.SearchForm>
           <S.Button type="submit">
             <GoSearch />
@@ -36,7 +29,7 @@ export const Searchbar = ({ onSubmit }) => {
           </S.Button>
           <S.Input
             type="text"
-            name="searchQuery"
+            name="imgName"
             autoComplete="off"
             placeholder="Search images and photos"
           />

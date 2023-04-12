@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { GlobalStyle } from 'components/GlobalStyle';
 import { Searchbar } from 'components/Searchbar';
 import { ImageGallery } from 'components/ImageGallery';
@@ -7,29 +7,22 @@ import { Container } from './App.styled';
 
 export class App extends Component {
   state = {
-    searchQuery: '',
+    imgName: '',
   };
 
-  handleSubmitForm = values => {
-    const searchQuery = values.searchQuery.trim().toLowerCase();
-
-    if (!searchQuery.length) {
-      toast.error('Enter valid value.');
-      return;
-    }
-
-    this.setState({ searchQuery });
+  handleSubmitForm = imgName => {
+    this.setState({ imgName });
   };
 
   render() {
-    const { searchQuery } = this.state;
+    const { imgName } = this.state;
 
     return (
       <Container>
         <GlobalStyle />
         <Searchbar onSubmit={this.handleSubmitForm} />
-        <ImageGallery imgName={searchQuery} />
-        <ToastContainer autoClose={3000} limit={1} />
+        <ImageGallery imgName={imgName} />
+        <ToastContainer autoClose={3000} />
       </Container>
     );
   }
