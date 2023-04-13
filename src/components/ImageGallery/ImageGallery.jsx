@@ -65,11 +65,11 @@ export class ImageGallery extends Component {
     }
   }
 
-  checkIsAllColection() {
+  checkIsAllColection = () => {
     if (this.state.images >= this.state.total) {
       toast(`You have uploaded all images for request ${this.props.imgName}`);
     }
-  }
+  };
 
   handleLoadMore = () => {
     this.setState(({ page }) => ({ page: page + 1 }));
