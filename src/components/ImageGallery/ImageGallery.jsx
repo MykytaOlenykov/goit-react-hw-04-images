@@ -36,7 +36,7 @@ export class ImageGallery extends Component {
           return;
         }
 
-        this.checkIsAllColection();
+        this.checkIsAllColection(data.hits.length, data.totalHits);
 
         this.setState({ images: data.hits, total: data.totalHits });
       } catch (error) {
@@ -56,7 +56,7 @@ export class ImageGallery extends Component {
           images: [...images, ...data.hits],
         }));
 
-        this.checkIsAllColection();
+        this.checkIsAllColection(data.hits.length, data.totalHits);
       } catch (error) {
         console.log(error);
       } finally {
@@ -65,9 +65,11 @@ export class ImageGallery extends Component {
     }
   }
 
-  checkIsAllColection = () => {
-    if (this.state.images >= this.state.total) {
-      toast(`You have uploaded all images for request ${this.props.imgName}`);
+  checkIsAllColection = (colactionSize, total) => {
+    if (colactionSize >= total) {
+      toast.success(
+        `You have uploaded all images for request ${this.props.imgName}`
+      );
     }
   };
 

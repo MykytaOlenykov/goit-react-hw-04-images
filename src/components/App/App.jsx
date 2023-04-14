@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { GlobalStyle } from 'components/GlobalStyle';
 import { Searchbar } from 'components/Searchbar';
 import { ImageGallery } from 'components/ImageGallery';
@@ -9,6 +9,20 @@ export class App extends Component {
   state = {
     imgName: '',
   };
+
+  shouldComponentUpdate(_, nextState) {
+    const prevImgName = this.state.imgName;
+    const nextImgName = nextState.imgName;
+
+    if (prevImgName === nextImgName) {
+      toast.info(
+        `Request for ${nextImgName} already processed. Enter new value.`
+      );
+      return false;
+    }
+
+    return true;
+  }
 
   handleSubmitForm = imgName => {
     this.setState({ imgName });
@@ -22,7 +36,7 @@ export class App extends Component {
         <GlobalStyle />
         <Searchbar onSubmit={this.handleSubmitForm} />
         <ImageGallery imgName={imgName} />
-        <ToastContainer autoClose={3000} />
+        <ToastContainer autoClose={5000} />
       </Container>
     );
   }
