@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import * as imgsAPI from 'services';
 import { ImageGalleryItem } from 'components/ImageGalleryItem';
@@ -19,11 +19,25 @@ export class ImageGallery extends Component {
     total: 0,
   };
 
-  async componentDidUpdate(prevProps, prevState) {
+  galleryRef = createRef();
+
+  getSnapshotBeforeUpdate(_, prevState) {
+    if (prevState.images.length < this.state.images.length) {
+      const gallery = this.galleryRef.current;
+      return gallery.scrollHeight - gallery.scrollTop;
+    }
+    return null;
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     const prevImgName = prevProps.imgName;
     const nextImgName = this.props.imgName;
     const prevPage = prevState.page;
     const nextPage = this.state.page;
+
+    if (snapshot !== null) {
+      window.scrollTo({ top: snapshot, behavior: 'smooth' });
+    }
 
     if (nextImgName !== prevImgName) {
       this.setState({ isLoading: true, page: 1, images: [], total: 0 });
@@ -83,7 +97,7 @@ export class ImageGallery extends Component {
 
     return (
       <>
-        <Gallery>
+        <Gallery ref={this.galleryRef}>
           {images.map(({ id, tags, webformatURL, largeImageURL }) => (
             <ImageGalleryItem
               key={id}
