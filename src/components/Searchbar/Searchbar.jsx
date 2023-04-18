@@ -6,22 +6,22 @@ import { GoSearch } from 'react-icons/go';
 
 export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = (values, { resetForm }) => {
-    const imgName = values.imgName.trim().toLowerCase();
+    const searchQuery = values.searchQuery.trim().toLowerCase();
 
-    if (!imgName.length) {
+    if (!searchQuery.length) {
       toast.error('Enter something in the field.');
       resetForm();
 
       return;
     }
 
-    onSubmit(imgName);
+    onSubmit(searchQuery);
     resetForm();
   };
 
   return (
     <S.Header>
-      <Formik initialValues={{ imgName: '' }} onSubmit={handleSubmit}>
+      <Formik initialValues={{ searchQuery: '' }} onSubmit={handleSubmit}>
         <S.SearchForm>
           <S.Button type="submit">
             <GoSearch />
@@ -29,7 +29,7 @@ export const Searchbar = ({ onSubmit }) => {
           </S.Button>
           <S.Input
             type="text"
-            name="imgName"
+            name="searchQuery"
             autoComplete="off"
             placeholder="Search images and photos"
           />

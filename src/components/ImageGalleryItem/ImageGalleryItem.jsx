@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'components/Modal';
-import { Item, Image } from './ImageGalleryItem.styled';
+import * as S from './ImageGalleryItem.styled';
 
 export class ImageGalleryItem extends Component {
   static propTypes = {
@@ -27,8 +27,8 @@ export class ImageGalleryItem extends Component {
     const { isModalOpen } = this.state;
 
     return (
-      <Item>
-        <Image src={imgUrl} alt={descr} onClick={this.showModal} />
+      <S.Item>
+        <S.Image src={imgUrl} alt={descr} onClick={this.showModal} />
         {isModalOpen && (
           <Modal
             largeImgUrl={largeImgURL}
@@ -36,7 +36,7 @@ export class ImageGalleryItem extends Component {
             onCloseModal={this.closeModal}
           />
         )}
-      </Item>
+      </S.Item>
     );
   }
 }
