@@ -20,11 +20,11 @@ export class Modal extends Component {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleKeyDown(e) {
+  handleKeyDown = e => {
     if (e.code === 'Escape') {
       this.props.onCloseModal();
     }
-  }
+  };
 
   handleBackdropClick = e => {
     if (e.target === e.currentTarget) {
