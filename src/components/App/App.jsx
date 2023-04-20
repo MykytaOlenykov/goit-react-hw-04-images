@@ -40,9 +40,9 @@ export class App extends Component {
     }
 
     if (nextSearchQuery !== prevSearchQuery) {
-      this.setState({ isLoading: true, page: 1, images: [], total: 0 });
-
       try {
+        this.setState({ isLoading: true });
+
         const data = await imgsAPI.getImgs({
           currentPage: nextPage,
           searchQuery: nextSearchQuery,
@@ -64,9 +64,9 @@ export class App extends Component {
     }
 
     if (nextPage > prevPage) {
-      this.setState({ isLoading: true });
-
       try {
+        this.setState({ isLoading: true });
+
         const data = await imgsAPI.getImgs({
           currentPage: nextPage,
           searchQuery: nextSearchQuery,
@@ -89,7 +89,7 @@ export class App extends Component {
     const isValid = this.validationSearchQuery(searchQuery);
 
     if (isValid) {
-      this.setState({ searchQuery });
+      this.setState({ searchQuery, page: 1, images: [], total: 0 });
     }
   };
 
