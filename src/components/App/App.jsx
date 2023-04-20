@@ -119,7 +119,8 @@ export class App extends Component {
 
   render() {
     const { images, isLoading, total } = this.state;
-    const isVisibleBtn = images.length !== 0 && images.length < total;
+    const isVisibleBtn =
+      !isLoading && images.length !== 0 && images.length < total;
 
     return (
       <S.Container>
