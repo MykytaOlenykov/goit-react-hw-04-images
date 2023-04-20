@@ -53,9 +53,9 @@ export class App extends Component {
           return;
         }
 
-        this.checkIsAllColection(data.hits.length, data.totalHits);
-
         this.setState({ images: data.hits, total: data.totalHits });
+
+        this.checkIsAllColection(data.hits.length, data.totalHits);
       } catch (error) {
         console.log(error);
       } finally {
@@ -126,11 +126,8 @@ export class App extends Component {
         <GlobalStyle />
         <Searchbar onSubmit={this.handleSubmitForm} />
         <ImageGallery ref={this.galleryRef} images={images} />
-        {isLoading ? (
-          <Loader />
-        ) : (
-          isVisibleBtn && <Button onLoadMore={this.handleLoadMore} />
-        )}
+        {isVisibleBtn && <Button onLoadMore={this.handleLoadMore} />}
+        {isLoading && <Loader />}
         <ToastContainer autoClose={5000} />
       </S.Container>
     );
