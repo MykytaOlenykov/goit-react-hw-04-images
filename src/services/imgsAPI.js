@@ -11,11 +11,11 @@ const defaultParams = {
   key: API_KEY,
 };
 
-export async function getImgs({ page, searchQuery }) {
+export async function getImgs({ currentPage, searchQuery }) {
   const params = {
     ...defaultParams,
     q: searchQuery,
-    page: page,
+    page: currentPage,
   };
 
   const response = await axios.get('', { params });

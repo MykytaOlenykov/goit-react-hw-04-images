@@ -44,7 +44,7 @@ export class App extends Component {
 
       try {
         const data = await imgsAPI.getImgs({
-          page: nextPage,
+          currentPage: nextPage,
           searchQuery: nextSearchQuery,
         });
 
@@ -68,7 +68,7 @@ export class App extends Component {
 
       try {
         const data = await imgsAPI.getImgs({
-          page: nextPage,
+          currentPage: nextPage,
           searchQuery: nextSearchQuery,
         });
 
