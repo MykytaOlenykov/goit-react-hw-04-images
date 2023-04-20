@@ -11,7 +11,7 @@ const defaultParams = {
   key: API_KEY,
 };
 
-export async function getImgs(page, searchQuery) {
+export async function getImgs({ page, searchQuery }) {
   const params = {
     ...defaultParams,
     q: searchQuery,

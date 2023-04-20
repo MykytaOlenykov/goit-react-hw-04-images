@@ -43,7 +43,10 @@ export class App extends Component {
       this.setState({ isLoading: true, page: 1, images: [], total: 0 });
 
       try {
-        const data = await imgsAPI.getImgs(nextPage, nextSearchQuery);
+        const data = await imgsAPI.getImgs({
+          page: nextPage,
+          searchQuery: nextSearchQuery,
+        });
 
         if (!data.hits.length) {
           toast.error(`No results found for ${nextSearchQuery}`);
@@ -64,7 +67,10 @@ export class App extends Component {
       this.setState({ isLoading: true });
 
       try {
-        const data = await imgsAPI.getImgs(nextPage, nextSearchQuery);
+        const data = await imgsAPI.getImgs({
+          page: nextPage,
+          searchQuery: nextSearchQuery,
+        });
 
         this.setState(({ images }) => ({
           images: [...images, ...data.hits],
