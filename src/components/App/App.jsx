@@ -12,7 +12,7 @@ export class App extends Component {
   state = {
     searchQuery: '',
     images: [],
-    page: 1,
+    currentPage: 1,
     isLoading: false,
     total: 0,
   };
@@ -29,59 +29,18 @@ export class App extends Component {
     return null;
   }
 
-  async componentDidUpdate(_, prevState, snapshot) {
+  componentDidUpdate(_, prevState, snapshot) {
     const prevSearchQuery = prevState.searchQuery;
     const nextSearchQuery = this.state.searchQuery;
-    const prevPage = prevState.page;
-    const nextPage = this.state.page;
+    const prevPage = prevState.currentPage;
+    const nextPage = this.state.currentPage;
 
     if (snapshot !== null) {
       window.scrollTo({ top: snapshot, behavior: 'smooth' });
     }
 
-    if (nextSearchQuery !== prevSearchQuery) {
-      try {
-        this.setState({ isLoading: true });
-
-        const data = await imgsAPI.getImgs({
-          currentPage: nextPage,
-          searchQuery: nextSearchQuery,
-        });
-
-        if (!data.hits.length) {
-          toast.error(`No results found for ${nextSearchQuery}`);
-          return;
-        }
-
-        this.setState({ images: data.hits, total: data.totalHits });
-
-        this.checkIsAllColection(data.hits.length, data.totalHits);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.setState({ isLoading: false });
-      }
-    }
-
-    if (nextPage > prevPage) {
-      try {
-        this.setState({ isLoading: true });
-
-        const data = await imgsAPI.getImgs({
-          currentPage: nextPage,
-          searchQuery: nextSearchQuery,
-        });
-
-        this.setState(({ images }) => ({
-          images: [...images, ...data.hits],
-        }));
-
-        this.checkIsAllColection(data.hits.length, data.totalHits);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.setState({ isLoading: false });
-      }
+    if (prevSearchQuery !== nextSearchQuery || prevPage !== nextPage) {
+      this.fetchImgs();
     }
   }
 
@@ -89,13 +48,46 @@ export class App extends Component {
     const isValid = this.validationSearchQuery(searchQuery);
 
     if (isValid) {
-      this.setState({ searchQuery, page: 1, images: [], total: 0 });
+      this.setState({ searchQuery, currentPage: 1, images: [], total: 0 });
     }
   };
 
   handleLoadMore = () => {
-    this.setState(({ page }) => ({ page: page + 1 }));
+    this.setState(({ currentPage }) => ({ currentPage: currentPage + 1 }));
   };
+
+  async fetchImgs() {
+    const { searchQuery, currentPage } = this.state;
+    const options = { searchQuery, currentPage };
+
+    try {
+      this.setState({ isLoading: true });
+
+      const { hits, totalHits } = await imgsAPI.getImgs(options);
+
+      if (currentPage === 1) {
+        if (!hits.length) {
+          toast.error(`No results found for ${searchQuery}`);
+          return;
+        }
+
+        this.setState({ images: hits, total: totalHits });
+      } else {
+        this.setState(({ images }) => ({
+          images: [...images, ...hits],
+        }));
+      }
+
+      this.checkIsAllCollection({
+        collectionSize: hits.length,
+        total: totalHits,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  }
 
   validationSearchQuery(newSearchQuery) {
     if (newSearchQuery === this.state.searchQuery) {
@@ -109,8 +101,8 @@ export class App extends Component {
     return true;
   }
 
-  checkIsAllColection(colactionSize, total) {
-    if (colactionSize >= total) {
+  checkIsAllCollection({ collectionSize, total }) {
+    if (collectionSize >= total) {
       toast.success(
         `You have uploaded all images for request ${this.state.searchQuery}`
       );
