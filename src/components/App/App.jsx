@@ -14,8 +14,11 @@ export const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  const [heightGallery, setHeightGallery] = useState(0);
-  const prevHeightGallery = useRef(0);
+  // Вариант 1
+  const [scrollValue, setScrollValue] = useState(0);
+  // Вариант 2
+  // const prevScrollValue = useRef(0);
+
   const galleryRef = useRef(null);
 
   const isVisibleBtn =
@@ -52,21 +55,20 @@ export const App = () => {
 
   useLayoutEffect(() => {
     const gallery = galleryRef.current;
-    console.log(currentPage, gallery.scrollHeight);
-    setHeightGallery(gallery.scrollHeight);
+    setScrollValue(gallery.scrollHeight);
   }, [currentPage]);
 
   useEffect(() => {
-    window.scrollTo({ top: heightGallery, behavior: 'smooth' });
-  }, [heightGallery, images]);
+    window.scrollTo({ top: scrollValue, behavior: 'smooth' });
+  }, [scrollValue, images]);
 
   // Вариант 2
 
   // useEffect(() => {
-  //   window.scrollTo({ top: prevHeightGallery.current, behavior: 'smooth' });
+  //   window.scrollTo({ top: prevScrollValue.current, behavior: 'smooth' });
 
   //   const gallery = galleryRef.current;
-  //   prevHeightGallery.current = gallery.scrollHeight - gallery.scrollTop;
+  //   prevScrollValue.current = gallery.scrollHeight;
   // }, [images]);
 
   useEffect(() => {
