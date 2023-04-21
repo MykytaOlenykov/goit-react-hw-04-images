@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { GlobalStyle } from 'components/GlobalStyle';
 import * as imgsAPI from 'services';
@@ -14,6 +14,8 @@ export const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  const [heightGallery, setHeightGallery] = useState(0);
+  const prevHeightGallery = useRef(0);
   const galleryRef = useRef(null);
 
   const isVisibleBtn =
@@ -45,6 +47,27 @@ export const App = () => {
   const handleLoadMore = () => {
     setCurrentPage(prevState => prevState + 1);
   };
+
+  // Вариант 1
+
+  useLayoutEffect(() => {
+    const gallery = galleryRef.current;
+    console.log(currentPage, gallery.scrollHeight);
+    setHeightGallery(gallery.scrollHeight);
+  }, [currentPage]);
+
+  useEffect(() => {
+    window.scrollTo({ top: heightGallery, behavior: 'smooth' });
+  }, [heightGallery, images]);
+
+  // Вариант 2
+
+  // useEffect(() => {
+  //   window.scrollTo({ top: prevHeightGallery.current, behavior: 'smooth' });
+
+  //   const gallery = galleryRef.current;
+  //   prevHeightGallery.current = gallery.scrollHeight - gallery.scrollTop;
+  // }, [images]);
 
   useEffect(() => {
     if (searchQuery === '') {
