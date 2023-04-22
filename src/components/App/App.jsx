@@ -14,10 +14,7 @@ export const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  // Вариант 1
   const [scrollValue, setScrollValue] = useState(0);
-  // Вариант 2
-  // const prevScrollValue = useRef(0);
 
   const galleryRef = useRef(null);
 
@@ -51,8 +48,6 @@ export const App = () => {
     setCurrentPage(prevState => prevState + 1);
   };
 
-  // Вариант 1
-
   useLayoutEffect(() => {
     const gallery = galleryRef.current;
     setScrollValue(gallery.scrollHeight);
@@ -61,15 +56,6 @@ export const App = () => {
   useEffect(() => {
     window.scrollTo({ top: scrollValue, behavior: 'smooth' });
   }, [scrollValue, images]);
-
-  // Вариант 2
-
-  // useEffect(() => {
-  //   window.scrollTo({ top: prevScrollValue.current, behavior: 'smooth' });
-
-  //   const gallery = galleryRef.current;
-  //   prevScrollValue.current = gallery.scrollHeight;
-  // }, [images]);
 
   useEffect(() => {
     if (searchQuery === '') {
