@@ -54,6 +54,10 @@ export const Button = styled.button`
   :hover {
     opacity: 1;
   }
+
+  :disabled {
+    opacity: 0.2;
+  }
 `;
 
 export const Label = styled.span`

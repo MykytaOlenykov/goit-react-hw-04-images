@@ -121,7 +121,7 @@ export const App = () => {
   return (
     <S.Container>
       <GlobalStyle />
-      <Searchbar onSubmit={handleSubmitForm} />
+      <Searchbar onSubmit={handleSubmitForm} isDisabledBtn={isLoading} />
       <ImageGallery ref={galleryRef} images={images} />
       {isVisibleBtn && <Button onLoadMore={handleLoadMore} />}
       {isLoading && <Loader />}
