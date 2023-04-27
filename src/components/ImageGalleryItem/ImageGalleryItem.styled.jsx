@@ -13,7 +13,7 @@ export const Image = styled.img`
   transition: transform
     ${({ theme }) => `${theme.duration} ${theme.timingFunction}`};
 
-  :hover {
+  &:hover {
     transform: scale(1.03);
     cursor: zoom-in;
   }

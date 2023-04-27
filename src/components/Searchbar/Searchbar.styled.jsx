@@ -51,11 +51,11 @@ export const Button = styled.button`
     height: 20px;
   }
 
-  :hover {
+  &:hover {
     opacity: 1;
   }
 
-  :disabled {
+  &:disabled {
     opacity: 0.2;
   }
 `;
@@ -82,7 +82,7 @@ export const Input = styled(Field)`
   padding-left: 4px;
   padding-right: 4px;
 
-  ::placeholder {
+  &::placeholder {
     font: inherit;
     font-size: 18px;
   }
