@@ -78,20 +78,29 @@ export const App = () => {
 
         const { hits, totalHits } = await imgsAPI.getImgs(options);
 
+        const newImages = hits.map(
+          ({ id, tags, webformatURL, largeImageURL }) => ({
+            id,
+            tags,
+            webformatURL,
+            largeImageURL,
+          })
+        );
+
         if (currentPage === 1) {
-          if (!hits.length) {
+          if (!newImages.length) {
             toast.error(`No results found for ${searchQuery}`);
             return;
           }
 
-          setImages(hits);
+          setImages(newImages);
           setTotal(totalHits);
         } else {
-          setImages(prevState => [...prevState, ...hits]);
+          setImages(prevState => [...prevState, ...newImages]);
         }
 
         checkIsAllCollection({
-          collectionSize: hits.length,
+          collectionSize: newImages.length,
           total: totalHits,
         });
       } catch (error) {

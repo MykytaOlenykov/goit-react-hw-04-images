@@ -18,7 +18,7 @@ export const ImageGallery = forwardRef(({ images }, ref) => (
 
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       id: PropTypes.number.isRequired,
       tags: PropTypes.string.isRequired,
       webformatURL: PropTypes.string.isRequired,

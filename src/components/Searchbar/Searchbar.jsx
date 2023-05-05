@@ -8,7 +8,7 @@ export const Searchbar = ({ onSubmit, isDisabledBtn }) => {
   const handleSubmit = (values, { resetForm }) => {
     const searchQuery = values.searchQuery.trim().toLowerCase();
 
-    if (!searchQuery.length) {
+    if (!searchQuery) {
       toast.error('Enter something in the field.');
       resetForm();
 
