@@ -21,33 +21,6 @@ export const App = () => {
   const isVisibleBtn =
     !isLoading && images.length !== 0 && images.length < total;
 
-  const validationSearchQuery = newSearchQuery => {
-    if (newSearchQuery === searchQuery) {
-      toast.info(
-        `Request for ${newSearchQuery} already processed. Enter new value.`
-      );
-
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleSubmitForm = searchQuery => {
-    const isValid = validationSearchQuery(searchQuery);
-
-    if (isValid) {
-      setSearchQuery(searchQuery);
-      setCurrentPage(1);
-      setImages([]);
-      setTotal(0);
-    }
-  };
-
-  const handleLoadMore = () => {
-    setCurrentPage(prevState => prevState + 1);
-  };
-
   useLayoutEffect(() => {
     const gallery = galleryRef.current;
     setScrollValue(gallery.scrollHeight);
@@ -62,8 +35,10 @@ export const App = () => {
       return;
     }
 
-    const checkIsAllCollection = ({ collectionSize, total }) => {
-      if (collectionSize >= total) {
+    const checkIsAllCollection = ({ currentPage, total }) => {
+      const lastPage = Math.ceil(total / 12);
+
+      if (currentPage === lastPage) {
         toast.success(
           `You have uploaded all images for request ${searchQuery}`
         );
@@ -100,7 +75,7 @@ export const App = () => {
         }
 
         checkIsAllCollection({
-          collectionSize: newImages.length,
+          currentPage,
           total: totalHits,
         });
       } catch (error) {
@@ -112,6 +87,33 @@ export const App = () => {
 
     fetchImgs();
   }, [searchQuery, currentPage]);
+
+  const validationSearchQuery = newSearchQuery => {
+    if (newSearchQuery === searchQuery) {
+      toast.info(
+        `Request for ${newSearchQuery} already processed. Enter new value.`
+      );
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmitForm = searchQuery => {
+    const isValid = validationSearchQuery(searchQuery);
+
+    if (isValid) {
+      setSearchQuery(searchQuery);
+      setCurrentPage(1);
+      setImages([]);
+      setTotal(0);
+    }
+  };
+
+  const handleLoadMore = () => {
+    setCurrentPage(prevState => prevState + 1);
+  };
 
   return (
     <S.Container>

@@ -6,12 +6,6 @@ import * as S from './Modal.styled';
 const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ largeImgUrl, descr, onCloseModal }) => {
-  const handleBackdropClick = e => {
-    if (e.target === e.currentTarget) {
-      onCloseModal();
-    }
-  };
-
   useEffect(() => {
     const handleKeyDown = e => {
       if (e.code === 'Escape') {
@@ -25,6 +19,12 @@ export const Modal = ({ largeImgUrl, descr, onCloseModal }) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onCloseModal]);
+
+  const handleBackdropClick = e => {
+    if (e.target === e.currentTarget) {
+      onCloseModal();
+    }
+  };
 
   return createPortal(
     <S.Overlay onClick={handleBackdropClick}>
